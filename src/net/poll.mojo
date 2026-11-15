@@ -23,7 +23,9 @@ separate filters (a descriptor registered for both can produce two events
 per wait), while epoll merges them into one event; `struct epoll_event` is
 packed to 12 bytes on x86-64 but padded to 16 bytes on other Linux
 architectures; kqueue signals peer hangup with EV_EOF on the read filter,
-epoll with EPOLLHUP/EPOLLRDHUP.
+epoll with EPOLLHUP/EPOLLRDHUP. A peer's half-close is reported only with
+read interest on both, so a descriptor watched for writing alone does not
+wake for it; EPOLLHUP and EPOLLERR still wake every registration.
 """
 
 from std.ffi import c_int, external_call, get_errno
@@ -191,9 +193,9 @@ struct Poller(Movable):
             else:
                 self._kevent_change(fd, _EVFILT_WRITE, _EV_DELETE, True)
         else:
-            var events = _EPOLLRDHUP
+            var events = 0
             if readable:
-                events |= _EPOLLIN
+                events |= _EPOLLIN | _EPOLLRDHUP
             if writable:
                 events |= _EPOLLOUT
             self._epoll_ctl(

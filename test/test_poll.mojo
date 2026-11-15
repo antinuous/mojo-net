@@ -301,6 +301,29 @@ def test_nonblocking_connect_refused() raises:
     poller.close()
 
 
+def test_half_close_needs_read_interest() raises:
+    var poller = Poller()
+    var listener = TCPListener("127.0.0.1", 0)
+    var client = TCPStream.connect("127.0.0.1", listener.local_port)
+    var server_side = listener.accept()
+    server_side.set_nonblocking(True)
+    poller.register(server_side.fd, readable=False, writable=False)
+
+    client.shutdown_write()
+    assert_equal(
+        len(poller.wait(100)), 0, "half-close without read interest is quiet"
+    )
+
+    poller.modify(server_side.fd, readable=True, writable=False)
+    var got = flags_for(poller.wait(2000), Int(server_side.fd))
+    assert_true(got[0] or got[2], "half-close wakes read interest")
+
+    client.close()
+    server_side.close()
+    listener.close()
+    poller.close()
+
+
 def main() raises:
     test_would_block_read()
     test_accept_and_read_readiness()
@@ -310,4 +333,5 @@ def main() raises:
     test_would_block_write_and_recovery()
     test_nonblocking_connect_success()
     test_nonblocking_connect_refused()
+    test_half_close_needs_read_interest()
     print("test_poll: all tests passed")

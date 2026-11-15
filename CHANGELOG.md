@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- On Linux, `Poller` asks for `EPOLLRDHUP` only with read interest. A
+  descriptor registered for writing alone, or for nothing, no longer
+  wakes every `wait` after its peer half-closes. kqueue already behaved
+  this way.
 - A timed `TCPStream.connect` / `connect_addr`, and a non-blocking connect
   that fails before the handshake starts, report a refused or reset peer
   as `CONNECTION_REFUSED_ERROR` / `CONNECTION_RESET_ERROR`. Those
