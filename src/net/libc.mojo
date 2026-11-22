@@ -763,7 +763,7 @@ def c_read(fd: c_int, buf: MutPointer[UInt8, _], length: Int) -> Int:
         on failure (errno is set).
     """
     return Int(
-        external_call["read", c_ssize_t](Int(fd), buf, length)
+        external_call["read", c_ssize_t](fd, buf, length)
     )
 
 
@@ -783,7 +783,7 @@ def c_write(fd: c_int, buf: ImmPointer[UInt8, _], length: Int) -> Int:
         (errno is set).
     """
     return Int(
-        external_call["write", c_ssize_t](Int(fd), buf, length)
+        external_call["write", c_ssize_t](fd, buf, length)
     )
 
 
