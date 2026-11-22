@@ -7,6 +7,8 @@
 TCP, UDP, DNS, Unix sockets, and readiness polling for **Mojo 1.0**. Built on
 libc because the standard library has no socket API yet.
 
+This mirror locks the Mojo build that antinuous/research pins, and a research toolchain bump moves this lock in the same batch.
+
 **[Compliance report](https://nsalerni.github.io/mojo-net/COMPLIANCE.html)**
 ([Markdown](COMPLIANCE.md)) is regenerated on every CI run.
 
