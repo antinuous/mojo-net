@@ -850,7 +850,7 @@ def c_unlink(mut path: String) -> c_int:
     Returns:
         0 on success, -1 on failure (errno is set).
     """
-    return external_call["unlink", c_int](path.as_c_string_slice())
+    return external_call["unlink", c_int](path.as_c_string_span())
 
 
 comptime S_IFMT = 0xF000
@@ -879,7 +879,7 @@ def c_lstat_is_socket(mut path: String) -> c_int:
     """
     var buf = Array[UInt8, 256](fill=0)
     if (
-        external_call["lstat", c_int](path.as_c_string_slice(), buf.unsafe_ptr())
+        external_call["lstat", c_int](path.as_c_string_span(), buf.unsafe_ptr())
         != 0
     ):
         if get_errno().value == ENOENT:
@@ -929,5 +929,5 @@ def c_inet_pton(af: Int, mut src: String, dst: MutPointer[UInt8, _]) -> c_int:
         family, -1 if the family is unsupported.
     """
     return external_call["inet_pton", c_int](
-        c_int(af), src.as_c_string_slice(), dst
+        c_int(af), src.as_c_string_span(), dst
     )

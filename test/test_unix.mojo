@@ -30,7 +30,7 @@ def sock_path(tag: StringSpan) -> String:
 
 
 def cleanup(var path: String):
-    _ = external_call["unlink", c_int](path.as_c_string_slice())
+    _ = external_call["unlink", c_int](path.as_c_string_span())
 
 
 def test_echo_and_eof() raises:

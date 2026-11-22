@@ -21,7 +21,7 @@ def sock_path() -> String:
 
 
 def cleanup(var path: String):
-    _ = external_call["unlink", c_int](path.as_c_string_slice())
+    _ = external_call["unlink", c_int](path.as_c_string_span())
 
 
 def accepts_blocking_stream[S: IOStream](stream: S):

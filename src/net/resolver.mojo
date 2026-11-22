@@ -91,8 +91,8 @@ def resolve(
 
     var res_ptr: UInt64 = 0
     var rc = external_call["getaddrinfo", c_int](
-        host_s.as_c_string_slice(),
-        port_s.as_c_string_slice(),
+        host_s.as_c_string_span(),
+        port_s.as_c_string_span(),
         hints.unsafe_ptr(),
         Pointer(to=res_ptr),
     )

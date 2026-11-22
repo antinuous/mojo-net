@@ -12,7 +12,7 @@ def socket_path() -> String:
 
 def unlink(path: StringSpan):
     var owned = String(path)
-    _ = external_call["unlink", c_int](owned.as_c_string_slice())
+    _ = external_call["unlink", c_int](owned.as_c_string_span())
 
 
 def main() raises:
